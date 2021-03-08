@@ -1,9 +1,12 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Pharmacy.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +26,13 @@ namespace Pharmacy
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<PharmacyContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddIdentity<Customer, IdentityRole>(options => {
+                options.Password.RequiredLength = 10;
+            }).AddEntityFrameworkStores<PharmacyContext>();
+
             services.AddControllersWithViews();
         }
 
