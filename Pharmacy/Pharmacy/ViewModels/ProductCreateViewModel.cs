@@ -1,16 +1,14 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Pharmacy.Models
+namespace Pharmacy.ViewModels
 {
-    public class Product
+    public class ProductCreateViewModel
     {
-        [Key]
-        public Guid Id { get; set; }
-        
         [Required]
         [StringLength(100, ErrorMessage = "Product name must not be longer than 100 characaters.")]
         public string Name { get; set; }
@@ -19,6 +17,6 @@ namespace Pharmacy.Models
         [Range(0.1, 10000)]
         public decimal Price { get; set; }
 
-        public string PhotoPath { get; set; }
+        public IFormFile Photo { get; set; }
     }
 }

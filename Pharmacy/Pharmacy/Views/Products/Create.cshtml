@@ -1,0 +1,42 @@
+﻿@model ProductCreateViewModel
+
+@{ 
+    ViewBag.Title = "Create new product";
+}
+
+<h1>Create new product</h1>
+
+<form method="post" enctype="multipart/form-data">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="Name">Name</label>
+        <input class="form-control" asp-for="Name" placeholder="Product name">
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Price">Price</label>
+        <input asp-for="Price" class="form-control" placeholder="Price">
+        <span asp-validation-for="Price" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <div class="custom-file">
+            <label asp-for="Photo" class="custom-file-label">Choose file...</label>
+            <input asp-for="Photo" class="form-control custom-file-input" />
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Create</button>
+
+    @section Scripts {
+        <script>
+            $(document).ready(() => {
+                $('.custom-file-input').on('change', (inputFileControl) => {
+                    debugger;
+                    const fileName = inputFileControl.target.value.split('\\').pop();
+                    const labelElement = $('.custom-file-label');
+
+                    labelElement.html(fileName);
+                });
+            });
+        </script>
+    }
+</form>
