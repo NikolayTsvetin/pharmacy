@@ -42,6 +42,11 @@ namespace Pharmacy.Controllers
                     PhotoPath = UploadPhotoAndReturnPhotoPath(model.Photo)
                 };
 
+                if (string.IsNullOrEmpty(product.PhotoPath))
+                {
+                    product.PhotoPath = @"no-image.svg";
+                }
+
                 await _pharmacyContext.AddAsync(product);
                 await _pharmacyContext.SaveChangesAsync();
 
