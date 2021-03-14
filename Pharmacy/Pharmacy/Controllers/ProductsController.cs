@@ -64,6 +64,45 @@ namespace Pharmacy.Controllers
             return View(allProducts);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Edit(string id)
+        {
+            if (Guid.TryParse(id, out Guid idAsGuid))
+            {
+                Product product = await _pharmacyContext.Products.FindAsync(idAsGuid);
+
+                if (product == null)
+                {
+                    // TODO: Fix with NotFound view.
+                    return View("Error");
+                }
+
+                ProductEditViewModel model = new ProductEditViewModel()
+                {
+                    Id = product.Id,
+                    Name = product.Name,
+                    Price = product.Price,
+                    ExistingPhotoPath = product.PhotoPath
+                };
+
+                return View(model);
+            }
+
+            // TODO: Fix with NotFound view.
+            return View("Error");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(ProductEditViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                ;
+            }
+
+            return View(model);
+        }
+
         private string UploadPhotoAndReturnPhotoPath(IFormFile photo)
         {
             string uniqueFileName = string.Empty;

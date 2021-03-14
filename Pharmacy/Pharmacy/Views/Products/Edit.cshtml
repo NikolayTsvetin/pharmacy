@@ -1,0 +1,45 @@
+﻿@model ProductEditViewModel
+
+@{ 
+    ViewBag.Title = "Edit product";
+}
+
+<h1>Edit product @Model.Name</h1>
+
+<form enctype="multipart/form-data" asp-controller="Products" asp-action="Edit" asp-route-id="@Model.Id" method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" value="@Model.Name">
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Price"></label>
+        <input asp-for="Price" class="form-control" value="@Model.Price">
+        <span asp-validation-for="Price" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <div class="custom-file">
+            <label asp-for="Photo" class="custom-file-label">Click here to change photo</label>
+            <input asp-for="Photo" class="form-control custom-file-input" />
+        </div>
+    </div>
+    <div class="form-group row col-sm-4 offset-4">
+        <img class="uploaded-image" src="/images/@Model.ExistingPhotoPath" asp-append-version="true" />
+    </div>
+    <button type="submit" class="btn btn-success mt-4 mr-3">Update</button>
+    <a class="btn btn-primary mt-4 mr-3" asp-action="AllProducts" asp-controller="Products">Cancel</a>
+
+    @section Scripts {
+        <script>
+            $(document).ready(() => {
+                $('.custom-file-input').on('change', (inputFileControl) => {
+                    const fileName = inputFileControl.target.value.split('\\').pop();
+                    const labelElement = $('.custom-file-label');
+
+                    labelElement.html(fileName);
+                });
+            });
+        </script>
+    }
+</form>
