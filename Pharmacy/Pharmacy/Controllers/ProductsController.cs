@@ -97,7 +97,23 @@ namespace Pharmacy.Controllers
         {
             if (ModelState.IsValid)
             {
-                ;
+                Product foundProduct = await _pharmacyContext.Products.FindAsync(model.Id);
+                foundProduct.Name = model.Name;
+                foundProduct.Price = model.Price;
+
+                // Before adding new photo, delete the current one.
+                if (!string.IsNullOrEmpty(foundProduct.PhotoPath) && model.Photo != null)
+                {
+                    string pathToExistingPhoto = Path.Combine(_hostingEnvironment.WebRootPath, "images", foundProduct.PhotoPath);
+
+                    System.IO.File.Delete(pathToExistingPhoto);
+                    foundProduct.PhotoPath = UploadPhotoAndReturnPhotoPath(model.Photo);
+                }
+
+                _pharmacyContext.Products.Update(foundProduct);
+                await _pharmacyContext.SaveChangesAsync();
+
+                return Redirect("/Products/AllProducts");
             }
 
             return View(model);
