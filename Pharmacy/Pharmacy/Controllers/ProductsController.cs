@@ -119,6 +119,23 @@ namespace Pharmacy.Controllers
             return View(model);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Delete(string id)
+        {
+            if (Guid.TryParse(id, out Guid key))
+            {
+                Product toDelete = await _pharmacyContext.Products.FindAsync(key);
+
+                _pharmacyContext.Products.Remove(toDelete);
+                await _pharmacyContext.SaveChangesAsync();
+
+                return Redirect("/Products/AllProducts");
+            }
+
+            // TODO
+            return View("Error");
+        }
+
         private string UploadPhotoAndReturnPhotoPath(IFormFile photo)
         {
             string uniqueFileName = string.Empty;

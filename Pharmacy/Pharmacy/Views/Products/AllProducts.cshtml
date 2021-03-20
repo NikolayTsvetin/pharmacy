@@ -21,8 +21,17 @@ else
                     <h2 class="text-center">@product.Name</h2>
                     <img class="uploaded-image mt-3 mb-5" src="/Images/@product.PhotoPath" asp-append-version="true" />
                     <p>Price: @product.Price</p>
-                    <a class="btn btn-primary mb-3" asp-controller="Products" asp-action="Edit" asp-route-id="@product.Id">Edit</a>
-                    <a class="btn btn-danger mb-3" asp-controller="Products" asp-action="Delete" asp-route-id="@product.Id">Delete</a>
+                    <form asp-action="Delete" asp-route-id="@product.Id" method="post">
+                        <a class="btn btn-primary mb-3" asp-controller="Products" asp-action="Edit" asp-route-id="@product.Id">Edit</a>
+                        <span id="confirmDeleteSpan_@product.Id" style="display: none">
+                            <span>Are you sure you want to delete?</span>
+                            <button type="submit" class="btn btn-danger mb-3">Yes</button>
+                            <a href="#" class="btn btn-primary mb-3" onclick="onDelete('@product.Id', false)">No</a>
+                        </span>
+                        <span id="deleteSpan_@product.Id">
+                            <a href="#" class="btn btn-danger mb-3" onclick="onDelete('@product.Id', true)">Delete</a>
+                        </span>
+                    </form>
                 </div>
             }
         </div>
