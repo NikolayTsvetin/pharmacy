@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace Pharmacy.Models
 {
-    public class Customer : IdentityUser
+    public class ApplicationUser : IdentityUser
     {
         public string City { get; set; }
+
+        public List<Product> Products { get; set; }
     }
 }

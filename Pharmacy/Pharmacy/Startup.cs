@@ -29,7 +29,7 @@ namespace Pharmacy
             services.AddDbContext<PharmacyContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<Customer, IdentityRole>(options => {
+            services.AddIdentity<ApplicationUser, IdentityRole>(options => {
                 options.Password.RequiredLength = 10;
             }).AddEntityFrameworkStores<PharmacyContext>();
 

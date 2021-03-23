@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@inject SignInManager<ApplicationUser> signInManager;
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -27,6 +28,29 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="AllProducts">All products</a>
                         </li>
+                    </ul>
+                    <ul class="navbar-nav ml-auto">
+                        @if (signInManager.IsSignedIn(User))
+                        {
+                            <li class="nav-item">
+                                <form asp-action="Logout" asp-controller="User" method="post">
+                                    <button type="submit" class="nav-link btn btn-link">Logout @User.Identity.Name</button>
+                                </form>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Login">Login</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Register</a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="RegisterPharmacy">As pharmacy</a>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="RegisterUser">As user</a>
+                                </div>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>

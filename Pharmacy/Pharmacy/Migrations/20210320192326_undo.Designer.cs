@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Pharmacy.Models;
 
 namespace Pharmacy.Migrations
 {
     [DbContext(typeof(PharmacyContext))]
-    partial class PharmacyContextModelSnapshot : ModelSnapshot
+    [Migration("20210320192326_undo")]
+    partial class undo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -150,7 +152,7 @@ namespace Pharmacy.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("Pharmacy.Models.ApplicationUser", b =>
+            modelBuilder.Entity("Pharmacy.Models.Customer", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -224,9 +226,6 @@ namespace Pharmacy.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -239,8 +238,6 @@ namespace Pharmacy.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ApplicationUserId");
 
                     b.ToTable("Products");
                 });
@@ -256,7 +253,7 @@ namespace Pharmacy.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("Pharmacy.Models.ApplicationUser", null)
+                    b.HasOne("Pharmacy.Models.Customer", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -265,7 +262,7 @@ namespace Pharmacy.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("Pharmacy.Models.ApplicationUser", null)
+                    b.HasOne("Pharmacy.Models.Customer", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -280,7 +277,7 @@ namespace Pharmacy.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Pharmacy.Models.ApplicationUser", null)
+                    b.HasOne("Pharmacy.Models.Customer", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -289,23 +286,11 @@ namespace Pharmacy.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("Pharmacy.Models.ApplicationUser", null)
+                    b.HasOne("Pharmacy.Models.Customer", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Pharmacy.Models.Product", b =>
-                {
-                    b.HasOne("Pharmacy.Models.ApplicationUser", null)
-                        .WithMany("Products")
-                        .HasForeignKey("ApplicationUserId");
-                });
-
-            modelBuilder.Entity("Pharmacy.Models.ApplicationUser", b =>
-                {
-                    b.Navigation("Products");
                 });
 #pragma warning restore 612, 618
         }

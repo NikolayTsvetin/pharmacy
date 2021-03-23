@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Pharmacy.Models
 {
-    public class PharmacyContext : IdentityDbContext<Customer>
+    public class PharmacyContext : IdentityDbContext<ApplicationUser>
     {
         public PharmacyContext(DbContextOptions<PharmacyContext> options) : base(options)
         {
