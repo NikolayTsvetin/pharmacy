@@ -86,6 +86,34 @@ namespace Pharmacy.Controllers
             return View();
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
+
+                if (!result.Succeeded)
+                {
+                    ModelState.AddModelError("Error from sign in manager: ", "Invalid Login Attempt");
+
+                    return View(model);
+                }
+
+                return RedirectToAction("Index", "Home");
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+
+            return RedirectToAction("Index", "Home");
+        }
+
         private async Task<IdentityResult> CreateRole(string roleName)
         {
             IdentityRole role = new IdentityRole() { Name = roleName };
