@@ -1,8 +1,20 @@
-﻿@{
+﻿@inject SignInManager<ApplicationUser> signInManager;
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    @if (signInManager.IsSignedIn(User) && User.IsInRole("User"))
+    {
+        <form method="post" asp-controller="Search" asp-action="Search">
+            <input onkeyup="onSearch()" id="searchInput" name="searchInput" class="mt-5 mb-2" type="search" placeholder="Search product" aria-label="Search">
+            <input id="searchCity" type="search" placeholder="In city" aria-label="Search city">
+            <br />
+            <button disabled="disabled" id="searchButton" class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+    }
 </div>
+
+<script src="~/js/eventHandlers.js"></script>

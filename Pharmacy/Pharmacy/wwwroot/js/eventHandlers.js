@@ -10,3 +10,13 @@
         $('#' + confirmDeleteSpan).hide();
     }
 }
+
+function onSearch() {
+    const searchInputValue = $('#searchInput').val();
+
+    if (searchInputValue && searchInputValue.length > 0) {
+        $('#searchButton').attr("disabled", false);
+    } else {
+        $('#searchButton').attr("disabled", true)
+    }
+}
