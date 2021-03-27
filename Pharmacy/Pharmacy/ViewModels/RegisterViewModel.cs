@@ -24,5 +24,7 @@ namespace Pharmacy.ViewModels
         public string ConfirmPassword { get; set; }
 
         public string City { get; set; }
+
+        public string Type { get; set; }
     }
 }

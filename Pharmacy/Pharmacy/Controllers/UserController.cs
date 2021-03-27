@@ -22,21 +22,24 @@ namespace Pharmacy.Controllers
             this._roleManager = roleManager;
         }
 
-        // TODO: Merge the two views/endpoints
         [HttpGet]
         public IActionResult RegisterPharmacy()
         {
-            return View();
+            ViewBag.type = "Pharmacy";
+
+            return View("Register");
         }
 
         [HttpGet]
         public IActionResult RegisterUser()
         {
-            return View();
+            ViewBag.type = "User";
+
+            return View("Register");
         }
 
         [HttpPost]
-        public async Task<IActionResult> RegisterUser(RegisterViewModel model)
+        public async Task<IActionResult> Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -45,12 +48,12 @@ namespace Pharmacy.Controllers
 
                 if (result.Succeeded)
                 {
-                    // create the respective role
-                    var roleExists = await _roleManager.RoleExistsAsync("User");
+                    // Create the respective role - User or Pharmacy
+                    var roleExists = await _roleManager.RoleExistsAsync(model.Type);
 
                     if (!roleExists)
                     {
-                        IdentityResult roleResult = await CreateRole("User");
+                        IdentityResult roleResult = await CreateRole(model.Type);
 
                         if (!roleResult.Succeeded)
                         {
@@ -63,7 +66,7 @@ namespace Pharmacy.Controllers
                         }
                     }
 
-                    await _userManager.AddToRoleAsync(applicationUser, "User");
+                    await _userManager.AddToRoleAsync(applicationUser, model.Type);
                     await _signInManager.SignInAsync(applicationUser, false);
 
                     return Redirect("/Home/Index");
