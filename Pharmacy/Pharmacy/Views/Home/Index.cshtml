@@ -15,6 +15,14 @@
             <button disabled="disabled" id="searchButton" class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
         </form>
     }
+    else if (signInManager.IsSignedIn(User) && User.IsInRole("Pharmacy"))
+    {
+        <h3 class="mt-3">Manage you pharmacy</h3>
+        <div class="text-center">
+            <a class="btn btn-primary mt-5" asp-controller="Products" asp-action="Create">Add new product</a>
+            <a class="btn btn-primary mt-5" asp-controller="Products" asp-action="Available" asp-route-userName="@User.Identity.Name">View all available products</a>
+        </div>
+    }
 </div>
 
 <script src="~/js/eventHandlers.js"></script>

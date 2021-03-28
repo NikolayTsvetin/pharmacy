@@ -18,5 +18,7 @@ namespace Pharmacy.ViewModels
         public decimal Price { get; set; }
 
         public IFormFile Photo { get; set; }
+
+        public string UserName { get; set; }
     }
 }

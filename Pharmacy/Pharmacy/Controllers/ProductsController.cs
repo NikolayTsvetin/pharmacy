@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Pharmacy.Models;
@@ -15,11 +16,13 @@ namespace Pharmacy.Controllers
     public class ProductsController : Controller
     {
         private readonly PharmacyContext _pharmacyContext;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IHostingEnvironment _hostingEnvironment;
 
-        public ProductsController(PharmacyContext pharmacyContext, IHostingEnvironment hostingEnvironment)
+        public ProductsController(PharmacyContext pharmacyContext, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment)
         {
             _pharmacyContext = pharmacyContext;
+            _userManager = userManager;
             _hostingEnvironment = hostingEnvironment;
         }
 
@@ -34,12 +37,22 @@ namespace Pharmacy.Controllers
         {
             if (ModelState.IsValid)
             {
+                ApplicationUser pharmacy = await _userManager.FindByNameAsync(model.UserName);
+
+                if (pharmacy == null)
+                {
+                    ModelState.AddModelError("Pharmacy error", $"There is not registered pharmacy with this id: {pharmacy.Id}");
+
+                    return View(model);
+                }
+
                 Product product = new Product()
                 {
                     Id = Guid.NewGuid(),
                     Name = model.Name,
                     Price = model.Price,
-                    PhotoPath = UploadPhotoAndReturnPhotoPath(model.Photo)
+                    PhotoPath = UploadPhotoAndReturnPhotoPath(model.Photo),
+                    ApplicationUserId = pharmacy.Id
                 };
 
                 if (string.IsNullOrEmpty(product.PhotoPath))
@@ -54,6 +67,24 @@ namespace Pharmacy.Controllers
             }
 
             return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Available(string userName)
+        {
+            ApplicationUser pharmacy = await _userManager.FindByNameAsync(userName);
+
+            if (pharmacy == null)
+            {
+                ModelState.AddModelError("Pharmacy error", $"There is not registered pharmacy with this id: {pharmacy.Id}");
+
+                return Redirect("AllProducts");
+            }
+
+            List<Product> allProducts = await _pharmacyContext.Products.ToListAsync();
+            List<Product> productsFromThisPharmacy = allProducts.Where(x => x.ApplicationUserId == pharmacy.Id).ToList();
+
+            return View("AllProducts", productsFromThisPharmacy);
         }
 
         [HttpGet]

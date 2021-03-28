@@ -20,5 +20,7 @@ namespace Pharmacy.Models
         public decimal Price { get; set; }
 
         public string PhotoPath { get; set; }
+
+        public string ApplicationUserId { get; set; }
     }
 }

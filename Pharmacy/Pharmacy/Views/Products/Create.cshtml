@@ -24,13 +24,13 @@
             <input asp-for="Photo" class="form-control custom-file-input" />
         </div>
     </div>
+    <input type="hidden" asp-for="UserName" value="@User.Identity.Name" />
     <button type="submit" class="btn btn-primary">Create</button>
 
     @section Scripts {
         <script>
             $(document).ready(() => {
                 $('.custom-file-input').on('change', (inputFileControl) => {
-                    debugger;
                     const fileName = inputFileControl.target.value.split('\\').pop();
                     const labelElement = $('.custom-file-label');
 
