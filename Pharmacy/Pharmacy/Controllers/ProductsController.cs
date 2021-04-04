@@ -63,6 +63,7 @@ namespace Pharmacy.Controllers
                 await _pharmacyContext.AddAsync(product);
                 await _pharmacyContext.SaveChangesAsync();
 
+                // TODO: Refirec to Available???
                 return Redirect("AllProducts");
             }
 

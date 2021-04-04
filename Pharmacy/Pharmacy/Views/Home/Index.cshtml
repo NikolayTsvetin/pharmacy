@@ -1,4 +1,5 @@
 ﻿@inject SignInManager<ApplicationUser> signInManager;
+@model List<Product>
 
 @{
     ViewData["Title"] = "Home Page";
@@ -10,7 +11,7 @@
     {
         <form method="post" asp-controller="Search" asp-action="Search">
             <input onkeyup="onSearch()" id="searchInput" name="searchInput" class="mt-5 mb-2" type="search" placeholder="Search product" aria-label="Search">
-            <input id="searchCity" type="search" placeholder="In city" aria-label="Search city">
+            <input id="searchCity" name="city" type="search" placeholder="In city" aria-label="Search city">
             <br />
             <button disabled="disabled" id="searchButton" class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
         </form>
@@ -24,5 +25,13 @@
         </div>
     }
 </div>
+@if (Model != null && Model.Any())
+{
+    <h1>ima v modela</h1>
+}
+else
+{
+    <h1>nqma v modela</h1>
+}
 
 <script src="~/js/eventHandlers.js"></script>

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Pharmacy.Models;
 using System;
 using System.Collections.Generic;
@@ -18,13 +19,21 @@ namespace Pharmacy.Controllers
             _logger = logger;
         }
 
+        [HttpGet]
         public IActionResult Index()
         {
-            return View();
-        }
+            if(!TempData.ContainsKey("products") || string.IsNullOrEmpty(TempData["products"].ToString()))
+            {
+                return View();
+            }
 
-        public IActionResult Privacy()
-        {
+            List<Product> products = JsonConvert.DeserializeObject<List<Product>>(TempData["products"].ToString());
+
+            if (products != null && products.Count > 0)
+            {
+                return View(products);
+            }
+
             return View();
         }
 
