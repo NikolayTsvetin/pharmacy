@@ -22,5 +22,7 @@ namespace Pharmacy.Models
         public string PhotoPath { get; set; }
 
         public string ApplicationUserId { get; set; }
+
+        public string City { get; set; }
     }
 }

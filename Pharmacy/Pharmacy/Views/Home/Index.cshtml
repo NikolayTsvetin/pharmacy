@@ -27,11 +27,24 @@
 </div>
 @if (Model != null && Model.Any())
 {
-    <h1>ima v modela</h1>
+    <div class="container">
+        <h3 class="text-center mt-3 mb-3">Your search has found @Model.Count matches:</h3>
+        <div class="row">
+            @foreach (var product in Model)
+            {
+                <div class="col-md-4 mb-4">
+                    <h2 class="text-center">@product.Name</h2>
+                    <img class="uploaded-image mt-3 mb-5" src="/Images/@product.PhotoPath" asp-append-version="true" />
+                    <p>Price: @product.Price</p>
+                    <p>In city: @product.City</p>
+                </div>
+            }
+        </div>
+    </div>
 }
 else
 {
-    <h1>nqma v modela</h1>
+    <div class="text-center mt-5"></div>
 }
 
 <script src="~/js/eventHandlers.js"></script>

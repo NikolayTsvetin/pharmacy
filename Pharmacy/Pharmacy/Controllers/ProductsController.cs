@@ -52,7 +52,8 @@ namespace Pharmacy.Controllers
                     Name = model.Name,
                     Price = model.Price,
                     PhotoPath = UploadPhotoAndReturnPhotoPath(model.Photo),
-                    ApplicationUserId = pharmacy.Id
+                    ApplicationUserId = pharmacy.Id,
+                    City = pharmacy.City
                 };
 
                 if (string.IsNullOrEmpty(product.PhotoPath))
@@ -63,8 +64,8 @@ namespace Pharmacy.Controllers
                 await _pharmacyContext.AddAsync(product);
                 await _pharmacyContext.SaveChangesAsync();
 
-                // TODO: Refirec to Available???
-                return Redirect("AllProducts");
+                TempData["userName"] = pharmacy.UserName;
+                return Redirect("Available");
             }
 
             return View(model);
@@ -73,6 +74,11 @@ namespace Pharmacy.Controllers
         [HttpGet]
         public async Task<IActionResult> Available(string userName)
         {
+            if (string.IsNullOrEmpty(userName) && TempData.ContainsKey("userName"))
+            {
+                userName = TempData["userName"].ToString();
+            } 
+
             ApplicationUser pharmacy = await _userManager.FindByNameAsync(userName);
 
             if (pharmacy == null)
