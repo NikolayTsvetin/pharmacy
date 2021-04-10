@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Pharmacy.Models;
@@ -20,6 +21,7 @@ namespace Pharmacy.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Index()
         {
             if(!TempData.ContainsKey("products") || string.IsNullOrEmpty(TempData["products"].ToString()))

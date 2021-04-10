@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Pharmacy.Models;
 using Pharmacy.ViewModels;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace Pharmacy.Controllers
 {
+    [AllowAnonymous]
     public class UserController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -90,7 +92,7 @@ namespace Pharmacy.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginViewModel model)
+        public async Task<IActionResult> Login(LoginViewModel model, string returnUrl)
         {
             if (ModelState.IsValid)
             {
@@ -103,7 +105,7 @@ namespace Pharmacy.Controllers
                     return View(model);
                 }
 
-                return RedirectToAction("Index", "Home");
+                return (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl)) ? Redirect(returnUrl) : RedirectToAction("Index", "Home");
             }
 
             return View(model);
