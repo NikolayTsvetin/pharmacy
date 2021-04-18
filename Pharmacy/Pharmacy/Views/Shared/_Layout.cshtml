@@ -24,8 +24,13 @@
                         </li>
                         @if (signInManager.IsSignedIn(User) && User.IsInRole("Administrator"))
                         {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="AllProducts">All products in all pharmacies</a>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Manage</a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Manager" asp-action="AllRoles">Manage roles</a>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Manager" asp-action="AllUsers">Manage users</a>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="AllProducts">All products in all pharmacies</a>
+                                </div>
                             </li>
                         }
                     </ul>
@@ -64,7 +69,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2021 - Pharmacy - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2021 - Pharmacy
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

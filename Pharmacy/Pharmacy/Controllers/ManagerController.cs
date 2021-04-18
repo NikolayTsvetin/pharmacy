@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Pharmacy.Models;
+using Pharmacy.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,101 @@ namespace Pharmacy.Controllers
             this._userManager = userManager;
             this._signInManager = signInManager;
             this._roleManager = roleManager;
+        }
+
+        [HttpGet]
+        public IActionResult AllRoles()
+        {
+            var roles = _roleManager.Roles;
+
+            return View(roles);
+        }
+
+        [HttpGet]
+        public IActionResult CreateRole()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateRole(CreateRoleViewModel role)
+        {
+            if (ModelState.IsValid)
+            {
+                IdentityRole newRole = new IdentityRole(role.RoleName);
+                var result = await _roleManager.CreateAsync(newRole);
+
+                if (result.Succeeded)
+                {
+                    return Redirect("/Manager/AllRoles");
+                }
+
+                foreach (var err in result.Errors)
+                {
+                    ModelState.AddModelError("Error from role manager", err.Description);
+                }
+            }
+
+            return View(role);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EditRole(string id)
+        {
+            IdentityRole role = await _roleManager.FindByIdAsync(id);
+
+            if (role == null)
+            {
+                ViewBag.ErrorMessage = $"Role with id {id} cannot be found.";
+
+                // TODO
+                return View("NotFound");
+            }
+
+            var model = new EditRoleViewModel() { Id = id, RoleName = role.Name };
+
+            foreach (var user in await _userManager.GetUsersInRoleAsync(role.Name))
+            {
+                model.Users.Add(user.UserName);
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteRole(string id)
+        {
+            IdentityRole role = await _roleManager.FindByIdAsync(id);
+
+            if (role == null)
+            {
+                ViewBag.ErrorMessage = $"Role with id {id} cannot be found.";
+
+                // TODO ??
+                return View("NotFound");
+            }
+
+            var result = await _roleManager.DeleteAsync(role);
+
+            if (result.Succeeded)
+            {
+                return Redirect("/Manager/AllRoles");
+            }
+
+            foreach (var err in result.Errors)
+            {
+                ModelState.AddModelError("Error from role manager", err.Description);
+            }
+
+            return Redirect("/Manager/AllRoles");
+        }
+
+        [HttpGet]
+        public IActionResult AllUsers()
+        {
+            var users = _userManager.Users;
+
+            return View(users);
         }
     }
 }
