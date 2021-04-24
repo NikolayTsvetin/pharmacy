@@ -142,5 +142,45 @@ namespace Pharmacy.Controllers
 
             return View(users);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteUser(string id)
+        {
+            ApplicationUser user = await _userManager.FindByIdAsync(id);
+
+            if (user == null)
+            {
+                ViewBag.ErrorMessage = $"User with id {id} cannot be found.";
+
+                return View("NotFound");
+            }
+
+            var result = await _userManager.DeleteAsync(user);
+
+            if (result.Succeeded)
+            {
+                return Redirect("/Manager/AllUsers");
+            }
+
+            foreach (var err in result.Errors)
+            {
+                ModelState.AddModelError("Error from user manager", err.Description);
+            }
+
+            return Redirect("/Manager/AllUsers");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EditUser(string id)
+        {
+            ApplicationUser user = await _userManager.FindByIdAsync(id);
+
+            if (user == null)
+            {
+                return View("NotFound");
+            }
+
+            return View(user);
+        }
     }
 }
