@@ -67,7 +67,6 @@ namespace Pharmacy.Controllers
             {
                 ViewBag.ErrorMessage = $"Role with id {id} cannot be found.";
 
-                // TODO
                 return View("NotFound");
             }
 
@@ -82,6 +81,34 @@ namespace Pharmacy.Controllers
         }
 
         [HttpPost]
+        public async Task<IActionResult> EditRole(EditRoleViewModel model)
+        {
+            IdentityRole role = await _roleManager.FindByIdAsync(model.Id);
+
+            if (role == null)
+            {
+                ViewBag.ErrorMessage = $"Role with id {model.Id} cannot be found.";
+
+                return View("NotFound");
+            }
+
+            role.Name = model.RoleName;
+            var result = await _roleManager.UpdateAsync(role);
+
+            if (result.Succeeded)
+            {
+                return RedirectToAction("AllRoles");
+            }
+
+            foreach (var err in result.Errors)
+            {
+                ModelState.AddModelError("Error from role manager", err.Description);
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
         public async Task<IActionResult> DeleteRole(string id)
         {
             IdentityRole role = await _roleManager.FindByIdAsync(id);
@@ -90,7 +117,6 @@ namespace Pharmacy.Controllers
             {
                 ViewBag.ErrorMessage = $"Role with id {id} cannot be found.";
 
-                // TODO ??
                 return View("NotFound");
             }
 

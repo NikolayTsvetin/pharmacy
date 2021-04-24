@@ -111,8 +111,7 @@ namespace Pharmacy.Controllers
 
                 if (product == null)
                 {
-                    // TODO: Fix with NotFound view.
-                    return View("Error");
+                    return View("NotFound");
                 }
 
                 ProductEditViewModel model = new ProductEditViewModel()
@@ -126,8 +125,7 @@ namespace Pharmacy.Controllers
                 return View(model);
             }
 
-            // TODO: Fix with NotFound view.
-            return View("Error");
+            return View("NotFound");
         }
 
         [HttpPost]
@@ -170,8 +168,7 @@ namespace Pharmacy.Controllers
                 return Redirect("/Products/AllProducts");
             }
 
-            // TODO
-            return View("Error");
+            return View("NotFound");
         }
 
         private string UploadPhotoAndReturnPhotoPath(IFormFile photo)
