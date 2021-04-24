@@ -177,10 +177,49 @@ namespace Pharmacy.Controllers
 
             if (user == null)
             {
+                ViewBag.ErrorMessage = $"User with id {id} cannot be found.";
+
                 return View("NotFound");
             }
 
-            return View(user);
+            var model = new EditUserViewModel()
+            {
+                Id = user.Id,
+                Email = user.Email,
+                City = user.City,
+                UserName = user.UserName,
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditUser(EditUserViewModel model)
+        {
+            ApplicationUser user = await _userManager.FindByIdAsync(model.Id);
+
+            if (user == null)
+            {
+                ViewBag.ErrorMessage = $"User with id {model.Id} cannot be found.";
+            }
+
+            user.Email = model.Email;
+            user.City = model.City;
+            user.UserName = model.UserName;
+
+            var result = await _userManager.UpdateAsync(user);
+
+            if (result.Succeeded)
+            {
+                return Redirect("/Manager/AllUsers");
+            }
+
+            foreach (var err in result.Errors)
+            {
+                ModelState.AddModelError("Error in user manager", err.Description);
+            }
+
+            return View(model);
         }
     }
 }
