@@ -6,10 +6,13 @@ using Microsoft.EntityFrameworkCore;
 using Pharmacy.Models;
 using Pharmacy.ViewModels;
 using System;
+using System.Web;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Data;
+using GemBox.Spreadsheet;
 
 namespace Pharmacy.Controllers
 {
@@ -77,7 +80,7 @@ namespace Pharmacy.Controllers
             if (string.IsNullOrEmpty(userName) && TempData.ContainsKey("userName"))
             {
                 userName = TempData["userName"].ToString();
-            } 
+            }
 
             ApplicationUser pharmacy = await _userManager.FindByNameAsync(userName);
 
@@ -162,6 +165,13 @@ namespace Pharmacy.Controllers
             {
                 Product toDelete = await _pharmacyContext.Products.FindAsync(key);
 
+                if (!string.IsNullOrEmpty(toDelete.PhotoPath))
+                {
+                    string pathToExistingPhoto = Path.Combine(_hostingEnvironment.WebRootPath, "images", toDelete.PhotoPath);
+
+                    System.IO.File.Delete(pathToExistingPhoto);
+                }
+
                 _pharmacyContext.Products.Remove(toDelete);
                 await _pharmacyContext.SaveChangesAsync();
 
@@ -169,6 +179,56 @@ namespace Pharmacy.Controllers
             }
 
             return View("NotFound");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Import()
+        {
+            IFormFile file = Request.Form.Files[0];
+
+            // Save the temp file, load it and delete it after the import is ready.
+            string tempFolder = Path.Combine(_hostingEnvironment.WebRootPath, "temp");
+            string uniqueFileName = $"{Guid.NewGuid()}_{file.FileName}";
+            string filePath = Path.Combine(tempFolder, uniqueFileName);
+            int counter = 0;
+
+            using (FileStream fs = new FileStream(filePath, FileMode.Create))
+            {
+                file.CopyTo(fs);
+            }
+
+            SpreadsheetInfo.SetLicense("FREE-LIMITED-KEY");
+            var excelFile = ExcelFile.Load(filePath);
+
+            foreach (var worksheet in excelFile.Worksheets)
+            {
+                foreach (var row in worksheet.Rows)
+                {
+                    var cells = row.AllocatedCells;
+                    string productName = cells[0].StringValue;
+                    decimal.TryParse(cells[1].StringValue, out decimal productPrice);
+
+                    if (!string.IsNullOrEmpty(productName) && productPrice > 0)
+                    {
+                        var currentUser = await _userManager.FindByNameAsync(User.Identity.Name);
+                        Product product = new Product() { Id = Guid.NewGuid(), Name = productName, Price = productPrice, ApplicationUserId = currentUser.Id, City = currentUser.City, PhotoPath = @"no-image.svg" };
+
+                        await _pharmacyContext.AddAsync(product);
+                        counter++;
+                    }
+                    else
+                    {
+                        System.IO.File.Delete(filePath);
+                        
+                        return Problem("Trying to import invalid data. In order to be imported the data must be in the following order: Name, Price with no empty values.");
+                    }
+                }
+            }
+
+            await _pharmacyContext.SaveChangesAsync();
+            System.IO.File.Delete(filePath);
+
+            return Ok($"Data imported successfully. {counter} new products are added to this pharmacy.");
         }
 
         private string UploadPhotoAndReturnPhotoPath(IFormFile photo)

@@ -20,3 +20,27 @@ function onSearch() {
         $('#searchButton').attr("disabled", true)
     }
 }
+
+function onImport() {
+    const fileUpload = $("#postedFile").get(0);
+    const files = fileUpload.files;
+    const fileData = new FormData();  
+
+    fileData.append(files[0].name, files[0]); 
+
+    $.ajax({
+        url: '/Products/Import',
+        type: 'post',
+        datatype: 'json',
+        contentType: false,
+        processData: false,
+        async: false,
+        data: fileData,
+        success: response => {
+            alert(response);
+        },
+        error: err => {
+            alert(err.responseJSON.detail);
+        }
+    });
+}
