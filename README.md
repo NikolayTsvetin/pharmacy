@@ -8,8 +8,8 @@ Dot net core application, using razor views for the UI, providing the following 
 - Users can search products and filter by city and get results for available products in pharmacies close to them. 
 - Administration role - can create, edit and delete users, roles and products.
 - Administrator can add and remove users from and to roles.
+- Pharmacies can upload excel file with products to be imported.
 
 ### Features to come (WIP):
-- Pharmacies can upload excel file with products to be imported.
 - Pharmacies can place more precise address (location).
 - Users can search by current location.
