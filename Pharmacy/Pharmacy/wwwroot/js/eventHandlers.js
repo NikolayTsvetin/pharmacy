@@ -37,10 +37,10 @@ function onImport() {
         async: false,
         data: fileData,
         success: response => {
-            alert(response);
+            toastr.success('Success!', response);
         },
         error: err => {
-            alert(err.responseJSON.detail);
+            toastr.error('Error.', err.responseJSON.detail);
         }
     });
 }
