@@ -1,0 +1,33 @@
+﻿@{
+    ViewData["Title"] = "Location";
+}
+
+<div class="text-center">
+    <h1>This page is still not ready - WIP</h1>
+    <div id="map" style="height: 800px"></div>
+</div>
+
+<script>
+    function initMap() {
+        const currentUserLocation = navigator.geolocation.getCurrentPosition(success => {
+            debugger;
+            const userLatitude = success.coords.latitude;
+            const userLongitude = success.coords.longitude;
+            const userLocation = { lat: userLatitude, lng: userLongitude };
+
+            const mapDiv = document.getElementById("map");
+            const map = new google.maps.Map(mapDiv, {
+                center: userLocation,
+                zoom: 14,
+            });
+            const marker = new google.maps.Marker({
+                position: userLocation,
+                map: map,
+            });
+
+        }, error => {
+                debugger;
+        });
+    }
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD0yc-h39noN5bmByw7mpnOe24bmt9mMxo&callback=initMap&libraries=&v=weekly" async></script>
