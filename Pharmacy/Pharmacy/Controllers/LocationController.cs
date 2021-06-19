@@ -23,7 +23,9 @@ namespace Pharmacy.Controllers
         public async Task<IActionResult> GetAddressForAllPharmacies()
         {
             var pharmacies = await _userManager.GetUsersInRoleAsync("Pharmacy");
-            var mapped = pharmacies.Select(x => new { Name = x.Email, Address = $"{x.City} {x.Street}" }).ToList();
+            var mapped = pharmacies
+                .Where(x => !string.IsNullOrEmpty(x.Street))
+                .Select(x => new { Name = x.Email, Address = $"{x.City} {x.Street}" }).ToList();
 
             return Json(mapped);
         }

@@ -7,7 +7,7 @@
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
-    @if (signInManager.IsSignedIn(User) && User.IsInRole("User"))
+    @if (signInManager.IsSignedIn(User) && (User.IsInRole("User") || User.IsInRole("Administrator")))
     {
         <form method="post" asp-controller="Search" asp-action="Search">
             <input onkeyup="onSearch()" id="searchInput" name="searchInput" class="mt-5 mb-2" type="search" placeholder="Search product" aria-label="Search">
