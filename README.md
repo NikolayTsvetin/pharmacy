@@ -9,7 +9,7 @@ Dot net core application, using razor views for the UI, providing the following 
 - Administration role - can create, edit and delete users, roles and products.
 - Administrator can add and remove users from and to roles.
 - Pharmacies can upload excel file with products to be imported.
+- Pharmacies fill their address on registering in order to be placed on the map.
+- Users can look at google map and see pharmacies around them.
 
 ### Features to come (WIP):
-- Pharmacies can place more precise address (location).
-- Users can search by current location.
