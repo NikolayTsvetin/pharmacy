@@ -11,22 +11,21 @@ namespace Pharmacy.Controllers
     public class LocationController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public LocationController(UserManager<ApplicationUser> userManager)
+        public LocationController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             this._userManager = userManager;
+            this._roleManager = roleManager;
         }
 
         [HttpGet]
-        public IActionResult GetAddressForAllPharmacies()
+        public async Task<IActionResult> GetAddressForAllPharmacies()
         {
-            // TODO: remove filtering for pharmacies by street, but do it by user roles tables and references.
-            var pharmacies = _userManager.Users
-                .Where(x => !string.IsNullOrEmpty(x.Street))
-                .Select(x => new { Name = x.Email, Address = $"{x.City} {x.Street}" })
-                .ToList();
+            var pharmacies = await _userManager.GetUsersInRoleAsync("Pharmacy");
+            var mapped = pharmacies.Select(x => new { Name = x.Email, Address = $"{x.City} {x.Street}" }).ToList();
 
-            return Json(pharmacies);
+            return Json(mapped);
         }
     }
 }
