@@ -10,6 +10,8 @@ namespace Pharmacy.Models
     {
         public string City { get; set; }
 
+        public string Street { get; set; }
+
         public List<Product> Products { get; set; }
     }
 }

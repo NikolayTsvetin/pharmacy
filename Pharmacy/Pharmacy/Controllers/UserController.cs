@@ -45,7 +45,7 @@ namespace Pharmacy.Controllers
         {
             if (ModelState.IsValid)
             {
-                ApplicationUser applicationUser = new ApplicationUser() { Email = model.Email, City = model.City, UserName = model.Email };
+                ApplicationUser applicationUser = new ApplicationUser() { Email = model.Email, City = model.City, UserName = model.Email, Street = model.Street };
                 var result = await _userManager.CreateAsync(applicationUser, model.Password);
 
                 if (result.Succeeded)

@@ -9,8 +9,7 @@
 
 <script>
     function initMap() {
-        const currentUserLocation = navigator.geolocation.getCurrentPosition(success => {
-            debugger;
+        navigator.geolocation.getCurrentPosition(success => {
             const userLatitude = success.coords.latitude;
             const userLongitude = success.coords.longitude;
             const userLocation = { lat: userLatitude, lng: userLongitude };
@@ -20,14 +19,29 @@
                 center: userLocation,
                 zoom: 14,
             });
-            const marker = new google.maps.Marker({
+
+            new google.maps.Marker({
                 position: userLocation,
                 map: map,
+                label: 'My location'
+            });
+
+            const addresses = this.getAddressForAllPharmacies();
+
+            addresses.responseJSON.forEach(address => {
+                const coordinates = this.getCoordinatesFromAddress(address.address).responseJSON[0];
+
+                new google.maps.Marker({
+                    position: { lat: +coordinates.lat, lng: +coordinates.lon},
+                    map: map,
+                    label: address.name
+                });
             });
 
         }, error => {
-                debugger;
+            toastr.error('Error.', error.message);
         });
     }
 </script>
+<script src="~/api/Location.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD0yc-h39noN5bmByw7mpnOe24bmt9mMxo&callback=initMap&libraries=&v=weekly" async></script>

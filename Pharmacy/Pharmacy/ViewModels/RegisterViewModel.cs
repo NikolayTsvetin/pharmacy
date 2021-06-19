@@ -23,7 +23,11 @@ namespace Pharmacy.ViewModels
         [Compare("Password", ErrorMessage = "Password and confirmation password do not match!")]
         public string ConfirmPassword { get; set; }
 
+        [Required]
         public string City { get; set; }
+
+        [Required]
+        public string Street { get; set; }
 
         public string Type { get; set; }
     }
